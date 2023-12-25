@@ -12,7 +12,6 @@ import {
   IonContent,
   IonMenuButton,
 } from '@ionic/react';
-import Notifications from './Notifications';
 import { useState } from 'react';
 import { notificationsOutline } from 'ionicons/icons';
 import { getHomeItems } from '../../store/selectors';
@@ -49,11 +48,6 @@ const Shop = () => {
           <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
-          <IonButtons slot="end">
-            <IonButton onClick={() => setShowNotifications(true)}>
-              <IonIcon icon={notificationsOutline} />
-            </IonButton>
-          </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding" fullscreen>
@@ -62,7 +56,6 @@ const Shop = () => {
             <IonTitle size="large">Shop</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <Notifications open={showNotifications} onDidDismiss={() => setShowNotifications(false)} />
         {homeItems.map((i, index) => (
           <ShopCard {...i} key={index} />
         ))}
