@@ -12,6 +12,7 @@ import {
   IonContent,
   IonMenuButton,
   useIonViewWillEnter,
+  IonRouterLink,
 } from '@ionic/react';
 import { useEffect, useState } from 'react';
 import { Storage } from '@ionic/storage';
@@ -47,7 +48,7 @@ const Shop = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Shop</IonTitle>
+          <IonTitle>QR Shop</IonTitle>
           <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
@@ -59,8 +60,10 @@ const Shop = () => {
             <IonTitle size="large">Shop</IonTitle>
           </IonToolbar>
         </IonHeader>
-        {homeItems.map((i, index) => (
-          <ShopCard {...i} key={index} />
+        {homeItems.map((el, index) => (
+          <IonRouterLink key={index} href={"/tabs/shop/" + el.id}>
+            <ShopCard {...el} />
+          </IonRouterLink>
         ))}
       </IonContent>
     </IonPage>

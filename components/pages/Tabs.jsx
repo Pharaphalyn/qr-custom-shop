@@ -5,8 +5,8 @@ import { addCircle, list, qrCode } from 'ionicons/icons';
 
 import Home from './Shop';
 import Add from './Add';
-import ListDetail from './ListDetail';
-import Settings from './Settings';
+import ProductDetail from './Product';
+import Scan from './Scan';
 
 const Tabs = () => {
   return (
@@ -14,7 +14,8 @@ const Tabs = () => {
       <IonRouterOutlet>
         <Route path="/tabs/shop" render={() => <Home />} exact={true} />
         <Route path="/tabs/add" render={() => <Add />} exact={true} />
-        <Route path="/tabs/shop/:listId" render={() => <ListDetail />} exact={true} />
+        <Route path="/tabs/shop/:productId" render={() => <ProductDetail />} exact={true} />
+        <Route path="/tabs/qr" render={() => <Scan />} exact={true} />
         <Route path="/tabs" render={() => <Redirect to="/tabs/shop" />} exact={true} />
       </IonRouterOutlet>
       <IonTabBar slot="bottom">

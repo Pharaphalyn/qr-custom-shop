@@ -4,11 +4,6 @@ import { StatusBar, Style } from '@capacitor/status-bar';
 
 import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route } from 'react-router-dom';
-
-// import Feed from './pages/Shop';
-import Lists from './pages/Add';
-import ListDetail from './pages/ListDetail';
-import Settings from './pages/Settings';
 import Tabs from './pages/Tabs';
 import { createStore } from '../data/IonicStorage';
 import { useEffect } from 'react';
