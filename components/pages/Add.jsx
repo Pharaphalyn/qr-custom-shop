@@ -1,4 +1,4 @@
-import { image, logoUsd, save } from 'ionicons/icons';
+import { image as imageIcon, logoUsd, save } from 'ionicons/icons';
 import Image from 'next/image';
 import Store from '../../store';
 import * as selectors from '../../store/selectors';
@@ -21,42 +21,36 @@ import {
 } from '@ionic/react';
 import { useEffect, useState } from 'react';
 
-// const ListEntry = ({ list, ...props }) => (
-//   <IonItem routerLink={`/tabs/shop/${list.id}`} className="list-entry">
-//     <IonLabel>{list.name}</IonLabel>
-//   </IonItem>
-// );
-
-// const AllLists = ({ onSelect }) => {
-//   const lists = Store.useState(selectors.getLists);
-
-//   return (
-//     <>
-//       {lists.map((list, i) => (
-//         <ListEntry list={list} key={i} />
-//       ))}
-//     </>
-//   );
-// };
-
 const Add = () => {
   const [inputElement, setInputElement] = useState();
   const [file, setFile] = useState();
-  const [fileData, setFileData] = useState();
+  const [image, setImage] = useState();
+  const [name, setName] = useState('');
+  const [price, setPrice] = useState(null);
+  const [description, setDescription] = useState('');
+
   useEffect(() => {
     console.log(file);
     if (!file) {
       return;
     }
     const reader = new FileReader();
-    reader.onload = function(event) {
-      // The file's text will be printed here
-      setFileData(event.target.result);
-      console.log(event.target.result);
+    reader.onload = (event) => {
+      setImage(event.target.result);
     };
     reader.readAsDataURL(file);
-    // setFileData(url);
   }, [file])
+
+  function saveProduct() {
+    const product = {
+      name,
+      price,
+      description,
+      image
+    };
+    console.log(product);
+  }
+
   return (
     <IonPage>
       <IonHeader translucent={true}>
@@ -71,12 +65,16 @@ const Add = () => {
           </IonToolbar>
         </IonHeader>
         <div className="p-5">
-          <IonInput placeholder="Product name"></IonInput>
-          <IonItem lines="none" className='ion-no-padding'>
-            <IonInput type="number" placeholder="Price"></IonInput>
+          <IonItem>
+            <IonInput value={name} onIonInput={(e) => setName(e.target.value)} placeholder="Product name"></IonInput>
+          </IonItem>
+          <IonItem>
+            <IonInput value={price} onIonInput={(e) => setPrice(e.target.value)} type="number" placeholder="Price"></IonInput>
             <IonIcon slot="end" icon={logoUsd}></IonIcon>
           </IonItem>
-          <IonTextarea rows={5} placeholder="Description"></IonTextarea>
+          <IonItem>
+            <IonTextarea value={description} onIonInput={(e) => setDescription(e.target.value)} rows={5} placeholder="Description"/>
+          </IonItem>
           <div className="flex justify-center flex-col mt-5">
             <IonButton onClick={() => inputElement.click()}>
               <input
@@ -90,11 +88,11 @@ const Add = () => {
                   )
                 }
               />
-              <IonIcon slot="start" icon={image} />
+              <IonIcon slot="start" icon={imageIcon} />
               Choose Image
             </IonButton>
-            {fileData && <div className="flex justify-center max-h-80 max-w-full m-5"><IonImg src={fileData} alt="Image Preview"/></div>}
-            <IonButton onClick={()=>console.log(file)}>
+            {image && <div className="flex justify-center max-h-80 max-w-full m-5"><IonImg src={image} alt="Image Preview"/></div>}
+            <IonButton onClick={saveProduct}>
               <IonIcon slot="start" icon={save} />
               Save
             </IonButton>
