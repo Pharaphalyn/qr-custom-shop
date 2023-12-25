@@ -1,4 +1,4 @@
-import { IonApp, IonLabel, IonRouterOutlet, setupIonicReact, IonTabs, IonTabBar, IonTabButton, IonIcon  } from '@ionic/react';
+import { IonApp, IonLabel, IonRouterOutlet, setupIonicReact, IonTabs, IonTabBar, IonTabButton, IonIcon, useIonViewWillEnter  } from '@ionic/react';
 import { cog, flash, list } from 'ionicons/icons';
 import { StatusBar, Style } from '@capacitor/status-bar';
 
@@ -10,6 +10,8 @@ import Lists from './pages/Add';
 import ListDetail from './pages/ListDetail';
 import Settings from './pages/Settings';
 import Tabs from './pages/Tabs';
+import { createStore } from '../data/IonicStorage';
+import { useEffect } from 'react';
 
 setupIonicReact({});
 
@@ -22,6 +24,9 @@ window.matchMedia("(prefers-color-scheme: dark)").addListener(async (status) => 
 });
 
 const AppShell = () => {
+  useEffect(() => {
+    createStore();
+  }, []);
   return (
     <IonApp>
       <IonReactRouter>

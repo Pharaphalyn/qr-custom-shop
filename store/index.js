@@ -1,6 +1,6 @@
 import { Store as PullStateStore } from 'pullstate';
 
-import { lists, homeItems, notifications } from '../mock';
+import { lists, products, homeItems, notifications } from '../mock';
 
 const Store = new PullStateStore({
   safeAreaTop: 0,
@@ -8,7 +8,8 @@ const Store = new PullStateStore({
   menuOpen: false,
   currentPage: null,
   homeItems,
-  lists
+  lists,
+  products
 });
 
 export default Store;

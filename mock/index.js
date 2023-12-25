@@ -40,6 +40,8 @@ export const notifications = [
   { title: 'Welcome to the app!', when: '1 month' },
 ];
 
+export const products = [];
+
 // Some fake lists
 export const lists = [
   {
