@@ -1,8 +1,4 @@
 import { image as imageIcon, logoUsd, save } from 'ionicons/icons';
-import Image from 'next/image';
-import Store from '../../store';
-import { Storage } from '@ionic/storage';
-import * as selectors from '../../store/selectors';
 
 import {
   IonPage,
@@ -11,17 +7,15 @@ import {
   IonTitle,
   IonContent,
   IonItem,
-  IonLabel,
-  IonList,
   IonInput,
   IonTextarea,
   IonButton,
-  IonPicker,
   IonIcon,
   IonImg
 } from '@ionic/react';
 import { useEffect, useState } from 'react';
 import { get, set } from '../../data/IonicStorage';
+import { useHistory } from 'react-router';
 
 
 const Add = () => {
@@ -31,9 +25,9 @@ const Add = () => {
   const [name, setName] = useState('');
   const [price, setPrice] = useState(null);
   const [description, setDescription] = useState('');
+  const history = useHistory();
 
   useEffect(() => {
-    console.log(file);
     if (!file) {
       return;
     }
@@ -70,6 +64,7 @@ const Add = () => {
     const products = (await get('products')) || [];
     products.push(product);
     set('products', products);
+    history.push("/tabs/shop/" + product.id, product);
   }
 
   return (
