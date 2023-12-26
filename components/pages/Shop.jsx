@@ -62,7 +62,7 @@ const Shop = () => {
           </IonToolbar>
         </IonHeader>
         {homeItems.map((el, index) => (
-          <Link key={index} to={{pathname: "/tabs/shop/" + el.id, state: {}}}>
+          <Link key={index} to={{pathname: "/tabs/shop/" + el.id, state: el}}>
             <ShopCard {...el} />
           </Link>
         ))}
