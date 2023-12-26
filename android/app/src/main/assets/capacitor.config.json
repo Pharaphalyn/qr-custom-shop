@@ -1,6 +1,6 @@
 {
 	"appId": "com.example.app",
-	"appName": "nextjs-tailwind-capacitor",
+	"appName": "qr-custom-shop",
 	"bundledWebRuntime": false,
 	"npmClient": "npm",
 	"webDir": "out",

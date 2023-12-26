@@ -17,6 +17,7 @@ import {
 import { useEffect, useState } from 'react';
 import { Storage } from '@ionic/storage';
 import { get } from '../../data/IonicStorage';
+import { Link } from 'react-router-dom';
 
 const ShopCard = ({ name, description, price, image }) => (
   <Card className="my-4 mx-auto">
@@ -61,9 +62,9 @@ const Shop = () => {
           </IonToolbar>
         </IonHeader>
         {homeItems.map((el, index) => (
-          <IonRouterLink key={index} href={"/tabs/shop/" + el.id}>
+          <Link key={index} to={{pathname: "/tabs/shop/" + el.id, state: {}}}>
             <ShopCard {...el} />
-          </IonRouterLink>
+          </Link>
         ))}
       </IonContent>
     </IonPage>
