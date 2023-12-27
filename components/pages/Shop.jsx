@@ -1,22 +1,17 @@
 import Image from 'next/image';
 import Card from '../ui/Card';
-
 import {
   IonPage,
   IonHeader,
   IonToolbar,
   IonTitle,
   IonButtons,
-  IonButton,
-  IonIcon,
   IonContent,
   IonMenuButton,
   useIonViewWillEnter,
-  IonRouterLink,
   useIonLoading,
 } from '@ionic/react';
-import { useEffect, useState } from 'react';
-import { Storage } from '@ionic/storage';
+import { useState } from 'react';
 import { get } from '../../data/IonicStorage';
 import { Link } from 'react-router-dom';
 

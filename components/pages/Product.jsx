@@ -13,13 +13,12 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-  useIonViewDidEnter,
   useIonViewWillEnter,
 } from '@ionic/react';
 import { pencil, trashBin } from 'ionicons/icons';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { get, set } from '../../data/IonicStorage';
-import { useEffect, useReducer, useState } from 'react';
+import { useState } from 'react';
 import QRCode from 'react-qr-code';
 
 const Details = ({ product, editItem, deleteItem }) => {

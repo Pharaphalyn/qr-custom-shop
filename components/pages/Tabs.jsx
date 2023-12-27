@@ -1,7 +1,6 @@
 import { Redirect, Route } from 'react-router-dom';
 import { IonRouterOutlet, IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/react';
 import { addCircle, list, qrCode } from 'ionicons/icons';
-
 import Home from './Shop';
 import Add from './Add';
 import ProductDetail from './Product';

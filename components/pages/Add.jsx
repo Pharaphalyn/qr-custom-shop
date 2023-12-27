@@ -1,5 +1,4 @@
 import { image as imageIcon, logoUsd, save } from 'ionicons/icons';
-
 import {
   IonPage,
   IonHeader,
