@@ -2,9 +2,11 @@ import {
   IonAccordion,
   IonAccordionGroup,
   IonBackButton,
+  IonButton,
   IonButtons,
   IonContent,
   IonHeader,
+  IonIcon,
   IonImg,
   IonItem,
   IonLabel,
@@ -13,12 +15,13 @@ import {
   IonToolbar,
   useIonViewDidEnter,
 } from '@ionic/react';
-import { useLocation, useParams } from 'react-router-dom';
-import { get } from '../../data/IonicStorage';
+import { pencil, trashBin } from 'ionicons/icons';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { get, set } from '../../data/IonicStorage';
 import { useState } from 'react';
 import QRCode from 'react-qr-code';
 
-const Details = ({ product }) => {
+const Details = ({ product, editItem, deleteItem }) => {
   return (
     <div className="p-5">
       {product.image && <div className="flex justify-center max-h-80 max-w-full mb-5">
@@ -43,6 +46,16 @@ const Details = ({ product }) => {
           </div>
         </IonAccordion>
       </IonAccordionGroup>
+      <div className="flex justify-center mt-5">
+        <IonButton onClick={editItem}>
+          <IonIcon slot="start" icon={pencil} />
+            Edit
+        </IonButton>
+        <IonButton color="danger" onClick={deleteItem}>
+          <IonIcon slot="start" icon={trashBin} />
+            Delete
+        </IonButton>
+      </div>
     </div>
   );
 };
@@ -52,6 +65,7 @@ const ProductDetail = () => {
   const [product, setProduct] = useState(productData);
   const params = useParams();
   const { productId } = params;
+  const history = useHistory();
 
   useIonViewDidEnter(async () => {
     if (productData && productData.id) {
@@ -60,6 +74,21 @@ const ProductDetail = () => {
     const products = await get('products');
     setProduct(products.find(el => el.id === +productId));
   });
+
+  const editItem = () => {
+
+  };
+
+  const deleteItem = async () => {
+    const products = await get('products');
+    const index = products.findIndex(el => el.id === product.id);
+    if (index === -1) {
+      return;
+    }
+    products.splice(index, 1);
+    await set('products', products);
+    history.goBack();
+  };
 
   return (
     <IonPage>
@@ -72,7 +101,7 @@ const ProductDetail = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        {product && <Details product={product} />}
+        {product && <Details deleteItem={deleteItem} editItem={editItem} product={product} />}
       </IonContent>
     </IonPage>
   );
