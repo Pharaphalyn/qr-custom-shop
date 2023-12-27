@@ -91,14 +91,14 @@ const Add = () => {
         </IonHeader>
         <div className="p-5">
           <IonItem>
-            <IonInput value={name} onIonInput={(e) => setName(e.target.value)} placeholder="Product name"></IonInput>
+            <IonInput label="Name" labelPlacement="floating" value={name} onIonInput={(e) => setName(e.target.value)} placeholder="Product name"></IonInput>
           </IonItem>
           <IonItem>
-            <IonInput value={price} onIonInput={(e) => setPrice(e.target.value)} type="number" placeholder="Price"></IonInput>
+            <IonInput label="Price" labelPlacement="floating" value={price} onIonInput={(e) => setPrice(e.target.value)} type="number" placeholder="Price"></IonInput>
             <IonIcon slot="end" icon={logoUsd}></IonIcon>
           </IonItem>
           <IonItem>
-            <IonTextarea value={description} onIonInput={(e) => setDescription(e.target.value)} rows={5} placeholder="Description"/>
+            <IonTextarea label="Description" labelPlacement="floating" value={description} onIonInput={(e) => setDescription(e.target.value)} rows={5} placeholder="Description"/>
           </IonItem>
           <div className="flex justify-center flex-col mt-5">
             <IonButton onClick={() => inputElement.click()}>
