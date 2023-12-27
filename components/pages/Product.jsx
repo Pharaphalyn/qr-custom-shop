@@ -84,7 +84,7 @@ const ProductDetail = () => {
   });
 
   const editItem = () => {
-    history.push("/tabs/add/" + product.id, product);
+    history.push("/tabs/shop/edit/" + product.id, product);
   };
 
   const deleteItem = async () => {

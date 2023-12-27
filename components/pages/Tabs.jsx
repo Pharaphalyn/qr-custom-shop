@@ -12,21 +12,21 @@ const Tabs = () => {
       <IonRouterOutlet>
         <Route path="/tabs/shop" render={() => <Home />} exact={true} />
         <Route path="/tabs/add" render={() => <Add />} exact={true} />
-        <Route path="/tabs/add/:productId" render={() => <Add />} exact={true} />
+        <Route path="/tabs/shop/edit/:productId" render={() => <Add />} exact={true} />
         <Route path="/tabs/shop/:productId" render={() => <ProductDetail />} exact={true} />
         <Route path="/tabs/qr" render={() => <Scan />} exact={true} />
         <Route path="/tabs" render={() => <Redirect to="/tabs/shop" />} exact={true} />
       </IonRouterOutlet>
       <IonTabBar slot="bottom">
-        <IonTabButton tab="tab1" href="/tabs/add/">
+        <IonTabButton tab="add" href="/tabs/add/">
           <IonIcon icon={addCircle} />
           <IonLabel>Add product</IonLabel>
         </IonTabButton>
-        <IonTabButton tab="tab2" href="/tabs/shop">
+        <IonTabButton tab="shop" href="/tabs/shop">
           <IonIcon icon={list} />
           <IonLabel>Shop</IonLabel>
         </IonTabButton>
-        <IonTabButton tab="tab3" href="/tabs/qr">
+        <IonTabButton tab="scan" href="/tabs/qr">
           <IonIcon icon={qrCode} />
           <IonLabel>Scan QR</IonLabel>
         </IonTabButton>
