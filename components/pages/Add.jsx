@@ -11,21 +11,39 @@ import {
   IonTextarea,
   IonButton,
   IonIcon,
-  IonImg
+  IonImg,
+  useIonViewDidEnter,
+  IonButtons,
+  IonBackButton
 } from '@ionic/react';
 import { useEffect, useState } from 'react';
 import { get, set } from '../../data/IonicStorage';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation, useParams } from 'react-router';
 
 
 const Add = () => {
+  const productData = useLocation().state || {};
+  const params = useParams();
+  const { productId } = params;
   const [inputElement, setInputElement] = useState();
   const [file, setFile] = useState();
-  const [image, setImage] = useState();
-  const [name, setName] = useState('');
-  const [price, setPrice] = useState(null);
-  const [description, setDescription] = useState('');
+  const [image, setImage] = useState(productData.image);
+  const [name, setName] = useState(productData.name);
+  const [price, setPrice] = useState(productData.price);
+  const [description, setDescription] = useState(productData.description);
   const history = useHistory();
+
+  useIonViewDidEnter(async () => {
+    if (!productId || (productData && productData.id)) {
+      return;
+    }
+    const products = await get('products');
+    const product = products.find(el => el.id === +productId);
+    setName(product.name);
+    setPrice(product.price);
+    setDescription(product.description);
+    setImage(product.image);
+  });
 
   useEffect(() => {
     if (!file) {
@@ -63,23 +81,41 @@ const Add = () => {
 
   async function saveProduct() {
     const product = {
-      id: hash(new Date() + name + price + description),
+      id: +productId || hash(new Date() + name + price + description),
       name,
       price,
       description,
       image
     };
     const products = (await get('products')) || [];
-    products.push(product);
-    set('products', products);
-    history.push("/tabs/shop/" + product.id, product);
-    resetState();
+    if (productId) {
+      const index = products.findIndex(el => el.id === +productId);
+      if (index === -1) {
+        return;
+      }
+      products[index] = product;
+      await set('products', products);
+
+      //I tried a lot of stuff here like passing product to location state, weird lifecycle hooks,
+      //force rerendering the product component, passing setters from the product details and setting it here.
+      //Local storage was the only solution that worked for me.
+      localStorage.setItem('product', JSON.stringify(product));
+      history.push("/tabs/shop/" + product.id, product);
+    } else {
+      products.push(product);
+      await set('products', products);
+      history.push("/tabs/shop/" + product.id, product);
+      resetState();
+    }
   }
 
   return (
     <IonPage>
       <IonHeader translucent={true}>
         <IonToolbar>
+          {productId && <IonButtons slot="start">
+            <IonBackButton defaultHref="/tabs/shop" />
+          </IonButtons>}
           <IonTitle>Add product</IonTitle>
         </IonToolbar>
       </IonHeader>

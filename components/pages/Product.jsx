@@ -14,11 +14,12 @@ import {
   IonTitle,
   IonToolbar,
   useIonViewDidEnter,
+  useIonViewWillEnter,
 } from '@ionic/react';
 import { pencil, trashBin } from 'ionicons/icons';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { get, set } from '../../data/IonicStorage';
-import { useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import QRCode from 'react-qr-code';
 
 const Details = ({ product, editItem, deleteItem }) => {
@@ -67,16 +68,24 @@ const ProductDetail = () => {
   const { productId } = params;
   const history = useHistory();
 
-  useIonViewDidEnter(async () => {
-    if (productData && productData.id) {
-      return;
+  useIonViewWillEnter(() => {
+    const setup = async () => {
+      if (productData && productData.id) {
+        const productStorage = localStorage.getItem('product');
+        if (productStorage) {
+          setProduct(JSON.parse(productStorage));
+          localStorage.removeItem('product');
+        }
+        return;
+      }
+      const products = await get('products');
+      setProduct(products.find(el => el.id === +productId));
     }
-    const products = await get('products');
-    setProduct(products.find(el => el.id === +productId));
+    setup();
   });
 
   const editItem = () => {
-
+    history.push("/tabs/add/" + product.id, product);
   };
 
   const deleteItem = async () => {
