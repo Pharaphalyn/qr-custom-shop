@@ -1,5 +1,4 @@
-import { IonApp, IonLabel, IonRouterOutlet, setupIonicReact, IonTabs, IonTabBar, IonTabButton, IonIcon, useIonViewWillEnter  } from '@ionic/react';
-import { cog, flash, list } from 'ionicons/icons';
+import { IonApp, IonLabel, IonRouterOutlet, setupIonicReact  } from '@ionic/react';
 import { StatusBar, Style } from '@capacitor/status-bar';
 
 import { IonReactRouter } from '@ionic/react-router';

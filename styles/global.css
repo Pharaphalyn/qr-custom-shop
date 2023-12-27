@@ -10,6 +10,16 @@ body {
   width: 100vw;
 }
 
+.barcode-scanning-active {
+  --background: transparent !important;
+  --ion-background-color: transparent !important;
+}
+
+.qr-loading .loading-wrapper {
+  background: transparent;
+  box-shadow: none;
+}
+
 /**
  * Styles for the Icon UI component.
  *

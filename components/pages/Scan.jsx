@@ -5,43 +5,74 @@ import {
   IonToolbar,
   IonTitle,
   IonContent,
-  IonList,
-  IonToggle,
-  IonLabel,
   useIonViewDidEnter,
+  useIonViewWillLeave,
+  IonButton,
+  useIonLoading,
 } from '@ionic/react';
 import {
   BarcodeScanner,
-  BarcodeFormat,
-  LensFacing,
 } from '@capacitor-mlkit/barcode-scanning';
-
-import Store from '../../store';
-import * as selectors from '../../store/selectors';
-import { setSettings } from '../../store/actions';
+import { useState } from 'react';
+import { get } from '../../data/IonicStorage';
+import { useHistory } from 'react-router';
 
 const Scan = () => {
+  const [qrValue, setQrValue] = useState();
+  const [scanActive, setScanActive] = useState(true);
+  const history = useHistory();
+  const [present, dismiss] = useIonLoading();
 
-  useIonViewDidEnter(scanSingleBarcode);
+  useIonViewDidEnter(() => {
+    scanSingleBarcode()
+      .then(qr => {
+        if (qr) {
+          setId(qr.rawValue);
+        }
+      });
+  });
+
+  useIonViewWillLeave(stopScan);
+
+  async function stopScan() {
+    document.querySelector('body')?.classList.remove('barcode-scanning-active');
+    return BarcodeScanner.stopScan();
+  }
+
+  async function goToProduct(id) {
+    await present({
+      spinner: 'circles',
+      cssClass: 'qr-loading'
+    });
+    const products = await get('products');
+    const product = products.find(el => el.id === +id);
+    if (product) {
+      history.push("/tabs/shop/" + id, product);
+    } else {
+      setQrValue(id);
+    }
+    dismiss();
+    setScanActive(false);
+  }
 
   async function scanSingleBarcode() {
-    return new Promise(async resolve => {
-      document.querySelector('body')?.classList.add('barcode-scanner-active');
-  
-      const listener = await BarcodeScanner.addListener(
-        'barcodeScanned',
-        async result => {
-          await listener.remove();
-          document
-            .querySelector('body')
-            ?.classList.remove('barcode-scanner-active');
-          await BarcodeScanner.stopScan();
-          resolve(result.barcode);
-        },
-      );
-  
-      await BarcodeScanner.startScan();
-    });
+    document.querySelector('body')?.classList.add('barcode-scanning-active');
+    let listen = true;
+    const listener = await BarcodeScanner.addListener(
+      'barcodeScanned',
+      async result => {
+        if (listen) {
+          listen = false
+        } else {
+          return;
+        }
+        await listener.remove();
+        await stopScan();
+        await goToProduct(result.barcode?.rawValue);
+      },
+    );
+    await BarcodeScanner.startScan();
+    setScanActive(true);
   };
 
   return (
@@ -52,6 +83,10 @@ const Scan = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        {!scanActive && <div className="flex justify-center flex-col m-5">
+          <div className="mb-5">The product with id &quot;<b>{qrValue}</b>&quot; does not exist. Try another QR code.</div>
+          <IonButton onClick={scanSingleBarcode}>Scan again</IonButton>
+        </div>}
       </IonContent>
     </IonPage>
   );
