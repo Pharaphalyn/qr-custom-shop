@@ -13,6 +13,7 @@ import {
   IonMenuButton,
   useIonViewWillEnter,
   IonRouterLink,
+  useIonLoading,
 } from '@ionic/react';
 import { useEffect, useState } from 'react';
 import { Storage } from '@ionic/storage';
@@ -37,10 +38,16 @@ const ShopCard = ({ name, description, price, image }) => (
 
 const Shop = () => {
   const [homeItems, setHomeItems] = useState([]);
+  const [present, dismiss] = useIonLoading();
   useIonViewWillEnter(() => {
     const getProducts = async () => {
+      await present({
+        spinner: 'circles',
+        cssClass: 'qr-loading'
+      });
       const products = (await get('products')) || [];
       setHomeItems(products);
+      setTimeout(dismiss, 100);
     };
     getProducts();
   });

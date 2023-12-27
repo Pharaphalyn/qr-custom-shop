@@ -32,7 +32,10 @@ const Scan = () => {
       });
   });
 
-  useIonViewWillLeave(stopScan);
+  useIonViewWillLeave(() => {
+    stopScan();
+    dismiss();
+  });
 
   async function stopScan() {
     document.querySelector('body')?.classList.remove('barcode-scanning-active');
@@ -46,13 +49,14 @@ const Scan = () => {
     });
     const products = await get('products');
     const product = products.find(el => el.id === +id);
+    setTimeout(dismiss, 100);
     if (product) {
+      setQrValue(null);
       history.push("/tabs/shop/" + id, product);
     } else {
       setQrValue(id);
     }
-    dismiss();
-    setScanActive(false);
+    setTimeout(() => setScanActive(false));
   }
 
   async function scanSingleBarcode() {
@@ -83,7 +87,7 @@ const Scan = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        {!scanActive && <div className="flex justify-center flex-col m-5">
+        {!scanActive && qrValue !== null && <div className="flex justify-center flex-col m-5">
           <div className="mb-5">The product with id &quot;<b>{qrValue}</b>&quot; does not exist. Try another QR code.</div>
           <IonButton onClick={scanSingleBarcode}>Scan again</IonButton>
         </div>}

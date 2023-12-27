@@ -38,6 +38,14 @@ const Add = () => {
     reader.readAsDataURL(file);
   }, [file])
 
+  function resetState() {
+    setFile(null);
+    setImage(null);
+    setName(null);
+    setPrice(null);
+    setDescription(null);
+  }
+
   function hash(str, seed = 0) {
     let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
     for(let i = 0, ch; i < str.length; i++) {
@@ -65,6 +73,7 @@ const Add = () => {
     products.push(product);
     set('products', products);
     history.push("/tabs/shop/" + product.id, product);
+    resetState();
   }
 
   return (
