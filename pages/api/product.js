@@ -1,4 +1,7 @@
+const { existsSync, writeFile } = require("fs")
 const { readFileSync, writeFileSync, openSync, closeSync } = require("fs")
+
+const fileName = '/tmp/products.json';
 
 const allowCors = fn => async (req, res) => {
     res.setHeader('Access-Control-Allow-Credentials', true)
@@ -18,13 +21,16 @@ const allowCors = fn => async (req, res) => {
 }
 
 function getProducts() {
-    closeSync(openSync('/tmp/products.json'));
-    const products = readFileSync(`/tmp/products.json`);
-    return products?.toJSON() || [];
+    const exists = existsSync(fileName);
+    if(!exists) {
+        writeFileSync(fileName, '[]', {flag: 'wx'});
+    }
+    const products = readFileSync(fileName, {encoding: 'utf8'});
+    return JSON.parse(products) || [];
 }
 
 function saveProducts(products) {
-    writeFileSync(`/tmp/${path}.txt`, JSON.stringify(products));
+    writeFileSync(fileName, JSON.stringify(products));
 }
 
 function handler(req, res) {
