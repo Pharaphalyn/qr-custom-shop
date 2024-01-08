@@ -12,7 +12,7 @@ import {
   useIonLoading,
 } from '@ionic/react';
 import { useState } from 'react';
-import { get } from '../../data/IonicStorage';
+import { config } from '../../config';
 import { Link } from 'react-router-dom';
 
 const ShopCard = ({ name, description, price, image }) => (
@@ -40,7 +40,8 @@ const Shop = () => {
         spinner: 'circles',
         cssClass: 'qr-loading'
       });
-      const products = (await get('products')) || [];
+      const products = (await (await fetch(config.PRODUCT_API)).json())?.products || [];
+      // const products = (await get('products')) || [];
       setHomeItems(products);
       setTimeout(dismiss, 100);
     };

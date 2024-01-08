@@ -13,8 +13,8 @@ import {
   BarcodeScanner,
 } from '@capacitor-mlkit/barcode-scanning';
 import { useState } from 'react';
-import { get } from '../../data/IonicStorage';
 import { useHistory } from 'react-router';
+import { config } from '../../config';
 
 const Scan = () => {
   const [qrValue, setQrValue] = useState();
@@ -46,8 +46,7 @@ const Scan = () => {
       spinner: 'circles',
       cssClass: 'qr-loading'
     });
-    const products = await get('products');
-    const product = products.find(el => el.id === +id);
+    const product = (await (await fetch(config.PRODUCT_API + '?id=' + id)).json())?.product;
     setTimeout(dismiss, 100);
     if (product) {
       setQrValue(null);

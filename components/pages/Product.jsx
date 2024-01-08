@@ -13,6 +13,7 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
+  useIonLoading,
   useIonViewWillEnter,
 } from '@ionic/react';
 import { pencil, trashBin } from 'ionicons/icons';
@@ -20,6 +21,7 @@ import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { get, set } from '../../data/IonicStorage';
 import { useState } from 'react';
 import QRCode from 'react-qr-code';
+import { config } from '../../config';
 
 const Details = ({ product, editItem, deleteItem }) => {
   return (
@@ -66,6 +68,7 @@ const ProductDetail = () => {
   const params = useParams();
   const { productId } = params;
   const history = useHistory();
+  const [present, dismiss] = useIonLoading();
 
   useIonViewWillEnter(() => {
     const setup = async () => {
@@ -77,8 +80,13 @@ const ProductDetail = () => {
         }
         return;
       }
-      const products = await get('products');
-      setProduct(products.find(el => el.id === +productId));
+      await present({
+        spinner: 'circles',
+        cssClass: 'qr-loading'
+      });
+      const product = (await (await fetch(config.PRODUCT_API + '?id=' + productId || productData.id)).json())?.product;
+      setProduct(product);
+      setTimeout(dismiss, 150);
     }
     setup();
   });
@@ -88,13 +96,13 @@ const ProductDetail = () => {
   };
 
   const deleteItem = async () => {
-    const products = await get('products');
-    const index = products.findIndex(el => el.id === product.id);
-    if (index === -1) {
-      return;
-    }
-    products.splice(index, 1);
-    await set('products', products);
+    await present({
+      spinner: 'circles',
+      cssClass: 'qr-loading'
+    });
+    await fetch(config.PRODUCT_API, {method: 'DELETE', body: JSON.stringify({id: product.id}),
+      headers: new Headers({"Content-Type": "application/json", Accept: 'application/json'})});
+    setTimeout(dismiss, 150);
     history.goBack();
   };
 

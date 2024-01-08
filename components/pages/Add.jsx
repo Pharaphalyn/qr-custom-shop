@@ -13,11 +13,12 @@ import {
   IonImg,
   useIonViewDidEnter,
   IonButtons,
-  IonBackButton
+  IonBackButton,
+  useIonLoading
 } from '@ionic/react';
 import { useEffect, useState } from 'react';
-import { get, set } from '../../data/IonicStorage';
 import { useHistory, useLocation, useParams } from 'react-router';
+import { config } from '../../config';
 
 
 const Add = () => {
@@ -31,17 +32,22 @@ const Add = () => {
   const [price, setPrice] = useState(productData.price);
   const [description, setDescription] = useState(productData.description);
   const history = useHistory();
+  const [present, dismiss] = useIonLoading();
 
   useIonViewDidEnter(async () => {
     if (!productId || (productData && productData.id)) {
       return;
     }
-    const products = await get('products');
-    const product = products.find(el => el.id === +productId);
+    present({
+      spinner: 'circles',
+      cssClass: 'qr-loading'
+    });
+    const product = (await (await fetch(config.PRODUCT_API + '?id=' + productId || productData.id)).json())?.product;
     setName(product.name);
     setPrice(product.price);
     setDescription(product.description);
     setImage(product.image);
+    setTimeout(dismiss, 150);
   });
 
   useEffect(() => {
@@ -86,14 +92,17 @@ const Add = () => {
       description,
       image
     };
-    const products = (await get('products')) || [];
     if (productId) {
       const index = products.findIndex(el => el.id === +productId);
+      present({
+        spinner: 'circles',
+        cssClass: 'qr-loading'
+      });
       if (index === -1) {
         return;
       }
-      products[index] = product;
-      await set('products', products);
+      await fetch(config.PRODUCT_API, {method: 'PUT', body: JSON.stringify({ product }),
+        headers: new Headers({"Content-Type": "application/json", Accept: 'application/json'})});
 
       //I tried a lot of stuff here like passing product to location state, weird lifecycle hooks,
       //force rerendering the product component, passing setters from the product details and setting it here.
@@ -101,11 +110,16 @@ const Add = () => {
       localStorage.setItem('product', JSON.stringify(product));
       history.push("/tabs/shop/" + product.id, product);
     } else {
-      products.push(product);
-      await set('products', products);
+      present({
+        spinner: 'circles',
+        cssClass: 'qr-loading'
+      });
+      await fetch(config.PRODUCT_API, {method: 'POST', body: JSON.stringify({ product }),
+        headers: new Headers({"Content-Type": "application/json", Accept: 'application/json'})});
       history.push("/tabs/shop/" + product.id, product);
       resetState();
     }
+    setTimeout(dismiss, 150);
   }
 
   return (
