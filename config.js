@@ -1,3 +1,4 @@
 export const config = {
-    PRODUCT_API: 'https://qr-custom-shop-ml3tg026r-alexs-projects-5159fb6e.vercel.app/api/product'
+    PRODUCT_API: 'https://qr-custom-shop-ml3tg026r-alexs-projects-5159fb6e.vercel.app/api/product',
+    VERCEL_COOKIE: '_vercel_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJUMHhVamJxWk5vVWFCWWdlSjNuSFFHWksiLCJpYXQiOjE3MDQ3MDYxNzIsImF2YXRhciI6bnVsbCwiYXVkIjoicXItY3VzdG9tLXNob3AtbWwzdGcwMjZyLWFsZXhzLXByb2plY3RzLTUxNTlmYjZlLnZlcmNlbC5hcHAiLCJ1c2VybmFtZSI6InBoYXJhcGhhbHluIiwic3ViIjoic3NvLXByb3RlY3Rpb24ifQ.ZyFt0fWfFS_3cfKT4QzgajoD7QtNAbyqTTGhg5lieZg'
 };
