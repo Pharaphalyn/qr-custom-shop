@@ -18,7 +18,6 @@ import {
 } from '@ionic/react';
 import { pencil, trashBin } from 'ionicons/icons';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { get, set } from '../../data/IonicStorage';
 import { useState } from 'react';
 import QRCode from 'react-qr-code';
 import { config } from '../../config';

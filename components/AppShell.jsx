@@ -3,7 +3,6 @@ import { StatusBar, Style } from '@capacitor/status-bar';
 import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route } from 'react-router-dom';
 import Tabs from './pages/Tabs';
-import { createStore } from '../data/IonicStorage';
 import { useEffect } from 'react';
 
 setupIonicReact({});
@@ -17,9 +16,6 @@ window.matchMedia("(prefers-color-scheme: dark)").addListener(async (status) => 
 });
 
 const AppShell = () => {
-  useEffect(() => {
-    createStore();
-  }, []);
   return (
     <IonApp>
       <IonReactRouter>
