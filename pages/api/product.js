@@ -1,4 +1,4 @@
-const { readFileSync, writeFileSync } = require("fs")
+const { readFileSync, writeFileSync, openSync, closeSync } = require("fs")
 
 const allowCors = fn => async (req, res) => {
     res.setHeader('Access-Control-Allow-Credentials', true)
@@ -18,6 +18,7 @@ const allowCors = fn => async (req, res) => {
 }
 
 function getProducts() {
+    closeSync(openSync('/tmp/products.json'));
     const products = readFileSync(`/tmp/products.json`);
     return products?.toJSON() || [];
 }
