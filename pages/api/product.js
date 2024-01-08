@@ -1,3 +1,5 @@
+const { readFileSync, writeFileSync } = require("fs")
+
 const allowCors = fn => async (req, res) => {
     res.setHeader('Access-Control-Allow-Credentials', true)
     res.setHeader('Access-Control-Allow-Origin', '*')
@@ -15,19 +17,28 @@ const allowCors = fn => async (req, res) => {
     return await fn(req, res)
 }
 
-const products = [];
+function getProducts() {
+    const products = readFileSync(`/tmp/products.json`);
+    return products?.toJSON() || [];
+}
+
+function saveProducts(products) {
+    writeFileSync(`/tmp/${path}.txt`, JSON.stringify(products));
+}
 
 function handler(req, res) {
     if (req.method === 'POST') {
         const product = req.body && req.body.product;
-        console.log(product);
         if (!product || !product.id) {
             return res.status(400).json({ error: 'Invalid product' });
         }
+        const products = getProducts();
         products.push(product);
+        saveProducts(products);
         return res.status(200).json({ id: product.id });
     }
     if (req.method === 'GET') {
+        const products = getProducts();
         const id = req.query.id;
         if (!id) {
             return res.status(200).json({ products });
@@ -35,6 +46,7 @@ function handler(req, res) {
         return res.status(200).json({product: products.find(el => el.id === +id)});
     }
     if (req.method === 'PUT') {
+        const products = getProducts();
         const product = req.body && req.body.product;
         if (!product || !product.id) {
             return res.status(400).json({ error: 'Invalid product' });
@@ -44,10 +56,11 @@ function handler(req, res) {
             return res.status(400).json({ error: 'Invalid product' });
         }
         products[index] = product;
+        saveProducts(products);
         return res.status(200).json({ id: +product.id });
     }
     if (req.method === 'DELETE') {
-        console.log(req.body);
+        const products = getProducts();
         const id = req.body.id;
         if (!id) {
             return res.status(400).json({ error: 'Invalid id' });
@@ -57,6 +70,7 @@ function handler(req, res) {
             return res.status(404).json({ error: 'id not found' });
         }
         products.splice(index, 1);
+        saveProducts(products);
         return res.status(200).json({ id: +id });
     }
     return res.status(200).send();

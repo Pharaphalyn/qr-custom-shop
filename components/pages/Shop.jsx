@@ -40,10 +40,7 @@ const Shop = () => {
         spinner: 'circles',
         cssClass: 'qr-loading'
       });
-      console.log(config.VERCEL_COOKIE);
-      const products = (await (await fetch(config.PRODUCT_API,
-        {headers: new Headers({'Cookie': config.VERCEL_COOKIE})})).json())?.products || [];
-      // const products = (await get('products')) || [];
+      const products = (await (await fetch(config.PRODUCT_API)).json())?.products || [];
       setHomeItems(products);
       setTimeout(dismiss, 100);
     };
