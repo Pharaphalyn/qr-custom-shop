@@ -28,4 +28,4 @@ Finally, to run the app, use Capacitor run command:
 npx cap run android
 ```
 
-There's also an apk file in /android/app/build/outputs/debug for your convenience.
+There's also an apk file in /android/app-debug.apk for your convenience.
