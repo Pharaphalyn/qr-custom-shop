@@ -14,7 +14,8 @@ import {
   useIonViewDidEnter,
   IonButtons,
   IonBackButton,
-  useIonLoading
+  useIonLoading,
+  useIonToast
 } from '@ionic/react';
 import { useEffect, useState } from 'react';
 import { useHistory, useLocation, useParams } from 'react-router';
@@ -34,6 +35,7 @@ const Add = () => {
   const [description, setDescription] = useState(productData.description);
   const history = useHistory();
   const [present, dismiss] = useIonLoading();
+  const [toast] = useIonToast();
 
   useIonViewDidEnter(async () => {
     if (!productId || (productData && productData.id)) {
@@ -72,12 +74,15 @@ const Add = () => {
     }
     try {
       const compressedFile = await imageCompression(imageFile, options);
-      console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
-      console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
 
       setFile(compressedFile);
     } catch (error) {
       console.log(error);
+      toast({
+        message: 'Problems while loading the image. Please try again.',
+        duration: 3000,
+        position: 'bottom',
+      });
     }
   }
 
