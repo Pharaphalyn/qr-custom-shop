@@ -19,6 +19,7 @@ import {
 import { useEffect, useState } from 'react';
 import { useHistory, useLocation, useParams } from 'react-router';
 import { config } from '../../config';
+import imageCompression from 'browser-image-compression';
 
 
 const Add = () => {
@@ -59,7 +60,26 @@ const Add = () => {
       setImage(event.target.result);
     };
     reader.readAsDataURL(file);
-  }, [file])
+  }, [file]);
+
+  async function processImage(file) {
+    const imageFile = file;
+
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+    }
+    try {
+      const compressedFile = await imageCompression(imageFile, options);
+      console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
+      console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
+
+      setFile(compressedFile);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   function resetState() {
     setFile(null);
@@ -157,7 +177,7 @@ const Add = () => {
                 ref={input => (input !== null ? setInputElement(input) : null)}
                 type="file"
                 onChange={e =>
-                  setFile(
+                  processImage(
                     e.nativeEvent.target.files?.[0] || {}
                   )
                 }

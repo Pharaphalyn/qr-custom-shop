@@ -32,20 +32,6 @@ function saveProducts(products) {
     writeFileSync(fileName, JSON.stringify(products));
 }
 
-async function resizeImage(product) {
-    if (!product.image) {
-        return;
-    }
-    const uri = product.image.split(';base64,').pop()
-    const imageBuffer = Buffer.from(uri, 'base64');
-    const compressedImage = product.image.split(';base64,')[0] + ';base64,' + (await sharp(imageBuffer)
-        .resize(200)
-        .jpeg({ mozjpeg: true })
-        .toBuffer())
-        .toString('base64');
-    product.image = compressedImage;
-}
-
 async function handler(req, res) {
     try {
         if (req.method === 'POST') {
@@ -54,7 +40,6 @@ async function handler(req, res) {
                 return res.status(400).json({ error: 'Invalid product' });
             }
             const products = getProducts();
-            await resizeImage(product);
             products.push(product);
             saveProducts(products);
             return res.status(200).json({ id: product.id });
@@ -77,7 +62,6 @@ async function handler(req, res) {
             if (index === -1) {
                 return res.status(400).json({ error: 'Invalid product' });
             }
-            resizeImage(product);
             products[index] = product;
             saveProducts(products);
             return res.status(200).json({ id: +product.id });
