@@ -1,14 +1,12 @@
-const { existsSync, writeFile } = require("fs")
-const { readFileSync, writeFileSync, openSync, closeSync } = require("fs");
+const { existsSync } = require("fs")
+const { readFileSync, writeFileSync } = require("fs");
 const sharp = require("sharp");
 
-const fileName = '/tmp/products.json';
+const fileName = '/tmp/product.json';
 
 const allowCors = fn => async (req, res) => {
     res.setHeader('Access-Control-Allow-Credentials', true)
     res.setHeader('Access-Control-Allow-Origin', '*')
-    // another common pattern
-    // res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
     res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
     res.setHeader(
       'Access-Control-Allow-Headers',
