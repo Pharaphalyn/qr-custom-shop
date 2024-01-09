@@ -1,6 +1,5 @@
 const { existsSync } = require("fs")
 const { readFileSync, writeFileSync } = require("fs");
-const sharp = require("sharp");
 
 const fileName = '/tmp/products.json';
 
