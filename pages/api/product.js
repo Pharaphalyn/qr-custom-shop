@@ -2,7 +2,7 @@ const { existsSync, writeFile } = require("fs")
 const { readFileSync, writeFileSync, openSync, closeSync } = require("fs");
 const sharp = require("sharp");
 
-const fileName = 'products.json';
+const fileName = '/tmp/products.json';
 
 const allowCors = fn => async (req, res) => {
     res.setHeader('Access-Control-Allow-Credentials', true)
