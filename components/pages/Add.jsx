@@ -54,37 +54,37 @@ const Add = () => {
   });
 
   useEffect(() => {
+    async function processImage(file) {
+      const imageFile = await imageCompression.getFilefromDataUrl(file);;
+  
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+      }
+      try {
+        const compressedFile = await imageCompression(imageFile, options);
+        const imageData = await imageCompression.getDataUrlFromFile(compressedFile);
+        setImage(imageData);
+      } catch (error) {
+        console.log(error);
+        toast({
+          message: 'Problems while loading the image. Please try again.',
+          duration: 3000,
+          position: 'bottom',
+        });
+      }
+    }
+
     if (!file) {
       return;
     }
     const reader = new FileReader();
     reader.onload = (event) => {
-      setImage(event.target.result);
+      processImage(event.target.result);
     };
     reader.readAsDataURL(file);
-  }, [file]);
-
-  async function processImage(file) {
-    const imageFile = file;
-
-    const options = {
-      maxSizeMB: 1,
-      maxWidthOrHeight: 1920,
-      useWebWorker: true,
-    }
-    try {
-      const compressedFile = await imageCompression(imageFile, options);
-
-      setFile(compressedFile);
-    } catch (error) {
-      console.log(error);
-      toast({
-        message: 'Problems while loading the image. Please try again.',
-        duration: 3000,
-        position: 'bottom',
-      });
-    }
-  }
+  }, [file, toast]);
 
   function resetState() {
     setFile(null);
@@ -182,7 +182,7 @@ const Add = () => {
                 ref={input => (input !== null ? setInputElement(input) : null)}
                 type="file"
                 onChange={e =>
-                  processImage(
+                  setFile(
                     e.nativeEvent.target.files?.[0] || {}
                   )
                 }
