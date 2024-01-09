@@ -2,7 +2,7 @@ const { existsSync, writeFile } = require("fs")
 const { readFileSync, writeFileSync, openSync, closeSync } = require("fs");
 const sharp = require("sharp");
 
-const fileName = '/tmp/products.json';
+const fileName = 'products.json';
 
 const allowCors = fn => async (req, res) => {
     res.setHeader('Access-Control-Allow-Credentials', true)
@@ -38,12 +38,13 @@ async function resizeImage(product) {
     if (!product.image) {
         return;
     }
-    const imageBuffer = Buffer.from(product.image, 'base64');
-    const compressedImage = (await sharp(imageBuffer)
+    const uri = product.image.split(';base64,').pop()
+    const imageBuffer = Buffer.from(uri, 'base64');
+    const compressedImage = product.image.split(';base64,')[0] + ';base64,' + (await sharp(imageBuffer)
         .resize(200)
         .jpeg({ mozjpeg: true })
         .toBuffer())
-        .toString();
+        .toString('base64');
     product.image = compressedImage;
 }
 
