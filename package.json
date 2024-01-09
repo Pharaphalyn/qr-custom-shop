@@ -34,7 +34,8 @@
     "react-qr-code": "^2.0.12",
     "react-router": "^5.3.4",
     "react-router-dom": "^5.3.4",
-    "react-virtuoso": "^1.1.1"
+    "react-virtuoso": "^1.1.1",
+    "sharp": "^0.33.1"
   },
   "devDependencies": {
     "@capacitor/cli": "^5.0.0",

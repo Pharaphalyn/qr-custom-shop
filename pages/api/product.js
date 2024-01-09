@@ -1,5 +1,6 @@
 const { existsSync, writeFile } = require("fs")
-const { readFileSync, writeFileSync, openSync, closeSync } = require("fs")
+const { readFileSync, writeFileSync, openSync, closeSync } = require("fs");
+const sharp = require("sharp");
 
 const fileName = '/tmp/products.json';
 
@@ -33,7 +34,20 @@ function saveProducts(products) {
     writeFileSync(fileName, JSON.stringify(products));
 }
 
-function handler(req, res) {
+async function resizeImage(product) {
+    if (!product.image) {
+        return;
+    }
+    const imageBuffer = Buffer.from(product.image, 'base64');
+    const compressedImage = (await sharp(imageBuffer)
+        .resize(200)
+        .jpeg({ mozjpeg: true })
+        .toBuffer())
+        .toString();
+    product.image = compressedImage;
+}
+
+async function handler(req, res) {
     try {
         if (req.method === 'POST') {
             const product = req.body && req.body.product;
@@ -41,6 +55,7 @@ function handler(req, res) {
                 return res.status(400).json({ error: 'Invalid product' });
             }
             const products = getProducts();
+            await resizeImage(product);
             products.push(product);
             saveProducts(products);
             return res.status(200).json({ id: product.id });
@@ -63,6 +78,7 @@ function handler(req, res) {
             if (index === -1) {
                 return res.status(400).json({ error: 'Invalid product' });
             }
+            resizeImage(product);
             products[index] = product;
             saveProducts(products);
             return res.status(200).json({ id: +product.id });
